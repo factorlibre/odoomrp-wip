@@ -2,7 +2,8 @@
 ##############################################################################
 # For copyright and license notices, see __openerp__.py file in root directory
 ##############################################################################
-from openerp import models, fields, api
+from openerp import models, fields, api, exceptions, _
+
 
 
 class StockPickingWave(models.Model):
@@ -72,3 +73,13 @@ class StockPickingWave(models.Model):
         self.ensure_one()
         cond = self._get_pickings_domain()
         return {'domain': {'picking_ids': cond}}
+
+    @api.multi
+    def done(self):
+        for wave in self:
+            for picking in wave.picking_ids:
+                if picking.state not in ('cancel', 'done'):
+                    raise exceptions.Warning(_(
+                        'Some pickings are not transferred. '
+                        'Please transfer pickings before set wave to done'))
+        return super(StockPickingWave, self).done()

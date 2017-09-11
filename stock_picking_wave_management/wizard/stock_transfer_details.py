@@ -94,7 +94,8 @@ class StockTransferDetails(models.TransientModel):
             for packop in packops:
                 packop.unlink()
             # Execute the transfer of the picking
-            picking.do_transfer()
+            if processed_ids:
+                picking.do_transfer()
             new_pickings = self._find_new_pickings(new_pickings, picking)
         if new_pickings:
             self._create_new_wave(new_pickings)
