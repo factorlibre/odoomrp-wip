@@ -78,7 +78,7 @@ class StockInventory(models.Model):
                     'prod_lot_id': lot_id,
                     'theoretical_std_price': product.standard_price,
                     'standard_price': line.standard_price,
-                    })
+                })
                 line.write({'fail': False, 'fail_reason': _('Processed')})
         return True
 
